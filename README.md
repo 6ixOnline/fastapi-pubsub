@@ -2,7 +2,7 @@
 
 A simple but yet elegant publish/subscribe socket implementation using FastAPI Websocket.
 
-## Instalation
+## Installation
 
 ```
 pip install fastapi-pubsub
