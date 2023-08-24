@@ -13,7 +13,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="fastapi_pubsub",
-    version="0.0.2",
+    version="0.0.3",
     author="D Correa",
     author_email="dhiogocorrea@yahoo.com.br",
     description="A simple but yet elegant publish/subscribe socket implementation using FastAPI Websocket.",
