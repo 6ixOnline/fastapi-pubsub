@@ -13,13 +13,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="fastapi_pubsub",
-    version="0.0.4",
+    version="0.0.5",
     author="D Correa",
     author_email="dhiogocorrea@yahoo.com.br",
     description="A simple but yet elegant publish/subscribe socket implementation using FastAPI Websocket.",
     long_description_content_type="text/markdown",
     long_description=long_description,
-    url="https://github.com/dhiogocorrea/fastapi_pubsub",
+    url="https://github.com/dhiogocorrea/fastapi-pubsub",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3"
