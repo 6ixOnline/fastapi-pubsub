@@ -12,7 +12,7 @@ pip install fastapi-pubsub
 
 FastAPI provides an awesome implementation of Websockets. But it can be painful to configure it to work as a publish/subscribe mechanism.
 
-FastAPI Pub/Sub implemented a `BaseWebSocket` that handles all client's connections under the hood. All you have to do is extend this class, overriding the method `process(self, client)` with your desired logic.
+FastAPI Pub/Sub implemented a `BaseWebSocket` that handles all client's connections under the hood. All you have to do is extend this class, overriding the method `generate_object_to_send(self)` with your desired logic.
 
 A minimun example of a server/client communication can be seen [here.](https://github.com/dhiogocorrea/fastapi-pubsub/tree/main/examples) Follow the instructions to see it working.
 
