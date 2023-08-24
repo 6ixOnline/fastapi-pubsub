@@ -26,13 +26,13 @@ class BaseWebSocket(ABC):
     async def close(self):
         await self.websocket.close()
 
-    async def run(self, execute_logic_on_exception=True):
+    async def run(self, send_message_on_exception=True):
         await self.websocket.accept()
         self.connection_manager.add(self.websocket_id, self)
 
         try:
             for client in self.connection_manager.get(self.websocket_id):
-                await self.process(client)
+                client.send_json(self.generate_object_to_send(client))
 
             while True:
                 await self.websocket.receive_text()
@@ -40,10 +40,10 @@ class BaseWebSocket(ABC):
         except WebSocketDisconnect:
             self.connection_manager.remove(self.websocket_id, self)
 
-            if execute_logic_on_exception:
+            if send_message_on_exception:
                 for client in self.connection_manager.get(self.websocket_id):
-                    await self.process(client)
+                    client.send_json(self.generate_object_to_send(client))
 
     @abstractmethod
-    async def process(self, client):
+    async def generate_object_to_send(self):
         pass

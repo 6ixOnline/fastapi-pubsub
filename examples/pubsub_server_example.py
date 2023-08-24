@@ -4,9 +4,9 @@ from fastapi_pubsub.base import BaseWebSocket
 
 
 class SimpleWebsocket(BaseWebSocket):
-    async def process(self, client):
+    async def generate_object_to_send(self):
         connections = self.connection_manager.get(self.websocket_id)
-        await client.send_json({"num_connected_clients": len(connections)})
+        return {"num_connected_clients": len(connections)}
 
 
 app = FastAPI()
