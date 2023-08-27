@@ -17,9 +17,9 @@ class RedisCredentials:
 
 
 class BasePubSubWebSocket(ABC):
-    def __init__(self, websocket: WebSocket, websocket_id: str, redis_credentials: RedisCredentials = None):
+    def __init__(self, websocket: WebSocket, channel_id: str, redis_credentials: RedisCredentials = None):
         self.websocket = websocket
-        self.websocket_id = websocket_id
+        self.channel_id = channel_id
 
         self.connection_manager = self._initialize_connection_manager(
             redis_credentials)
@@ -44,7 +44,7 @@ class BasePubSubWebSocket(ABC):
 
     async def run(self, send_message_on_exception=True):
         await self.websocket.accept()
-        self.connection_manager.add(self.websocket_id, self)
+        self.connection_manager.add(self.channel_id, self)
 
         try:
             await self.process()
@@ -53,13 +53,13 @@ class BasePubSubWebSocket(ABC):
                 await self.websocket.receive_text()
 
         except WebSocketDisconnect:
-            self.connection_manager.remove(self.websocket_id, self)
+            self.connection_manager.remove(self.channel_id, self)
 
             if send_message_on_exception:
                 await self.process()
 
     async def process(self):
-        for client in self.connection_manager.get(self.websocket_id):
+        for client in self.connection_manager.get(self.channel_id):
             response = await self.generate_object_to_send()
             await client.send_json(response)
 
