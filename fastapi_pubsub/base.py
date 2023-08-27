@@ -47,8 +47,7 @@ class BasePubSubWebSocket(ABC):
         self.connection_manager.add(self.websocket_id, self)
 
         try:
-            for client in self.connection_manager.get(self.websocket_id):
-                client.send_json(self.generate_object_to_send(client))
+            await self.process()
 
             while True:
                 await self.websocket.receive_text()
@@ -57,8 +56,12 @@ class BasePubSubWebSocket(ABC):
             self.connection_manager.remove(self.websocket_id, self)
 
             if send_message_on_exception:
-                for client in self.connection_manager.get(self.websocket_id):
-                    client.send_json(self.generate_object_to_send(client))
+                await self.process()
+
+    async def process(self):
+        for client in self.connection_manager.get(self.websocket_id):
+            response = await self.generate_object_to_send()
+            await client.send_json(response)
 
     @abstractmethod
     async def generate_object_to_send(self):
