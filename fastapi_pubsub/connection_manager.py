@@ -1,18 +1,19 @@
 from abc import ABC, abstractmethod
+from typing import Any
 import redis
 
 
 class BaseConnectionManager(ABC):
     @abstractmethod
-    def get(self, key):
+    def get(self, websocket_id: str):
         pass
 
     @abstractmethod
-    def add(self, key, obj):
+    def add(self, websocket_id: str, value: Any):
         pass
 
     @abstractmethod
-    def remove(self, key, obj):
+    def remove(self, websocket_id: str, value: Any):
         pass
 
 
@@ -28,16 +29,16 @@ class MemoryConnectionManager(BaseConnectionManager):
     def get(self, websocket_id: str):
         return self.connections.get(websocket_id, set())
 
-    def add(self, websocket_id: str, obj):
+    def add(self, websocket_id: str, value: Any):
         if websocket_id not in self.connections:
             self.connections[websocket_id] = set()
 
-        self.connections[websocket_id].add(obj)
+        self.connections[websocket_id].add(value)
 
-    def remove(self, websocket_id: str, obj):
+    def remove(self, websocket_id: str, value: Any):
         connections_set = self.connections.get(websocket_id)
         if connections_set:
-            connections_set.remove(obj)
+            connections_set.remove(value)
 
 
 class RedisConnectionManager:
@@ -45,12 +46,12 @@ class RedisConnectionManager:
         self.storage = redis.StrictRedis(
             host=host, port=port, db=db, username=username, password=password)
 
-    def get(self, key):
-        connections = self.storage.smembers(key)
+    def get(self, websocket_id: str):
+        connections = self.storage.smembers(websocket_id)
         return set(connections)
 
-    def add(self, key, obj):
-        self.storage.sadd(key, obj)
+    def add(self, websocket_id: str, value: Any):
+        self.storage.sadd(websocket_id, value)
 
-    def remove(self, key, obj):
-        self.storage.srem(key, obj)
+    def remove(self, websocket_id: str, value: Any):
+        self.storage.srem(websocket_id, value)
