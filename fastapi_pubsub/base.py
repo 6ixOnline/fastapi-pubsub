@@ -5,14 +5,30 @@ import json
 
 from fastapi import WebSocket, WebSocketDisconnect
 
-from fastapi_pubsub.connection_manager import ConnectionManager
+from fastapi_pubsub.connection_manager import MemoryConnectionManager, RedisConnectionManager
 
 
-class BaseWebSocket(ABC):
-    def __init__(self, websocket: WebSocket, websocket_id: str):
+class RedisCredentials:
+    host: str
+    port: int
+    username: str
+    password: str
+    db: int
+
+
+class BasePubSubWebSocket(ABC):
+    def __init__(self, websocket: WebSocket, websocket_id: str, redis_credentials: RedisCredentials = None):
         self.websocket = websocket
         self.websocket_id = websocket_id
-        self.connection_manager = ConnectionManager()
+
+        self.connection_manager = self._initialize_connection_manager(
+            redis_credentials)
+
+    def _initialize_connection_manager(self, redis_credentials: RedisCredentials):
+        if redis_credentials is not None:
+            return RedisConnectionManager(**redis_credentials.__dict__)
+        else:
+            return MemoryConnectionManager()
 
     async def send_json(self, data: Dict):
         await self.send_message(json.dumps(data))
