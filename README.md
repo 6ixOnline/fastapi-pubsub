@@ -14,7 +14,6 @@ FastAPI provides an awesome implementation of Websockets. But it can be painful 
 
 FastAPI Pub/Sub implemented a `BaseWebSocket` that handles all client's connections under the hood. All you have to do is extend this class, overriding the method `generate_object_to_send(self)` with your desired logic.
 
-
 ```python
 from fastapi_pubsub.base import BaseWebSocket
 
@@ -24,8 +23,6 @@ class SimpleWebsocket(BaseWebSocket):
         connections = self.connection_manager.get(self.websocket_id)
         return {"num_connected_clients": len(connections)}
 ```
-
-
 
 ```python
 app = FastAPI()
@@ -41,5 +38,3 @@ A minimun example of a server/client communication can be seen [here.](https://g
 ## Contributing
 
 Despite being full functional, this project is in a very early stage. **Pull requests are very welcome!**
-
-In my opinion, a good next step here is to implement some in-memory database to store connections at [connection_manager](https://github.com/dhiogocorrea/fastapi-pubsub/blob/main/fastapi_pubsub/connection_manager.py). For now, it uses a dictionary to handle it.
