@@ -2,7 +2,7 @@
 
 ## Server:
 
-This server extends the base class `BaseWebSocket` and implements the `process` method by simply sending the number of connected clients each time a new client is connected to this websocket url.
+This server extends the base class `BaseWebSocket` and implements the `generate_object_to_send` method by simply sending the number of connected clients each time a new client is connected to this websocket url.
 
 ### Running:
 
